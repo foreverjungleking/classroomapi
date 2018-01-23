@@ -3,8 +3,10 @@ project with .Net WebApi, EF
 
 Project Assumptions:
 
-Allow students classNumber not define class
-Allow class have no students
+student and class are many to many relationship.
+
+allow class have no student
+
 
 How to Use the Project:
 
