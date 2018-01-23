@@ -1,6 +1,7 @@
 namespace ClassRoomAPI.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
@@ -27,17 +28,15 @@ namespace ClassRoomAPI.Models
         public DbSet<Class> Classes { get; set; }
     }
 
-    //public class MyEntity
-    //{
-    //    public int Id { get; set; }
-    //    public string Name { get; set; }
-    //}
-
     public class Student
     {
+        [Key]
+        [Column(Order = 0)]
         [StringLength(5)]
         [RegularExpression("^[0-9]{5}$")]
         public string id { get; set; }
+        [Key]
+        [Column(Order = 1)]
         [Range(0, 99)]
         public int classNumber { get; set; }
         [Range(0, 100)]

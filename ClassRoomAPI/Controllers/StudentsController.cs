@@ -23,8 +23,9 @@ namespace ClassRoomAPI.Controllers
         public async Task<IHttpActionResult> GetStudentClassTotalScore(string id)
         {
 
-            Student student = await db.Students.FindAsync(id);
-            if (student == null)
+            var student = db.Students.Where(x => x.id == id);
+
+            if (student == null || student.Count() ==0)
             {
                 StudentNotFoundError notfound_error = new StudentNotFoundError();
                 notfound_error.error = "student-not-found";
@@ -32,7 +33,7 @@ namespace ClassRoomAPI.Controllers
             }
             else
             {
-                int total_score = db.Students.AsEnumerable().Where(x => x.id == id).Sum(x => x.score);
+                int total_score = student.Sum(x => x.score);
                 TotalScore ts = new TotalScore();
                 ts.total = total_score;
                 return Ok(ts);
@@ -49,16 +50,17 @@ namespace ClassRoomAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (StudentExists(student.id))
+            var existed_student = ExistedStudent(student.id, student.classNumber);
+
+            if (existed_student == null)
             {
-                var existed_student = db.Students.Find(student.id);
-                existed_student.classNumber = student.classNumber;
-                existed_student.score = student.score;
-                db.Entry(existed_student).State = EntityState.Modified;
+                db.Students.Add(student);
             }
             else
             {
-                db.Students.Add(student);
+                existed_student.classNumber = student.classNumber;
+                existed_student.score = student.score;
+                db.Entry(existed_student).State = EntityState.Modified;
             }
 
             try
@@ -83,9 +85,10 @@ namespace ClassRoomAPI.Controllers
             base.Dispose(disposing);
         }
 
-        private bool StudentExists(string id)
+        private Student ExistedStudent(string id, int classnumber)
         {
-            return db.Students.Count(e => e.id == id) > 0;
+
+            return db.Students.Where(e => e.id == id && e.classNumber == classnumber).FirstOrDefault();
         }
     }
 }

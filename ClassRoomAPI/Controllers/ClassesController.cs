@@ -26,7 +26,7 @@ namespace ClassRoomAPI.Controllers
                 (from student in db.Students
                  join @class in db.Classes on student.classNumber equals @class.classNumber
                  select student)
-                .OrderByDescending(x => x.score).ThenBy(x => x.id).FirstOrDefaultAsync();
+                .OrderByDescending(x => x.score).ThenBy(x => x.id).ThenBy(x => x.classNumber).FirstOrDefaultAsync();
 
             if (topstudent == null)
             {
