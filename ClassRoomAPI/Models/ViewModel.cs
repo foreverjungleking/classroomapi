@@ -10,7 +10,7 @@ namespace ClassRoomAPI.Models
         public int total { get; set; }
     }
 
-    public class StudentNotFoundError
+    public class Error
     {
         public string error { get; set; }
     }

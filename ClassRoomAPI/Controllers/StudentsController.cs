@@ -27,7 +27,7 @@ namespace ClassRoomAPI.Controllers
 
             if (student == null || student.Count() ==0)
             {
-                StudentNotFoundError notfound_error = new StudentNotFoundError();
+                Error notfound_error = new Error();
                 notfound_error.error = "student-not-found";
                 return Ok(notfound_error);
             }
@@ -48,6 +48,13 @@ namespace ClassRoomAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if(!ClassExists(student.classNumber))
+            {
+                Error notfound_error = new Error();
+                notfound_error.error = "class-not-found";
+                return Ok(notfound_error);
             }
 
             var existed_student = ExistedStudent(student.id, student.classNumber);
@@ -89,6 +96,11 @@ namespace ClassRoomAPI.Controllers
         {
 
             return db.Students.Where(e => e.id == id && e.classNumber == classnumber).FirstOrDefault();
+        }
+
+        private bool ClassExists(int id)
+        {
+            return db.Classes.Count(e => e.classNumber == id) > 0;
         }
     }
 }
