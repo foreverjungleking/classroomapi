@@ -33,12 +33,15 @@ namespace ClassRoomAPI.Models
         [Key]
         [Column(Order = 0)]
         [StringLength(5)]
+        [Required]
         [RegularExpression("^[0-9]{5}$")]
         public string id { get; set; }
         [Key]
+        [Required]
         [Column(Order = 1)]
         [Range(0, 99)]
         public int classNumber { get; set; }
+        [Required]
         [Range(0, 100)]
         public int score { get; set; }
     }
@@ -46,8 +49,10 @@ namespace ClassRoomAPI.Models
     public class Class
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Required]
         [Range(0, 99)]
         public int classNumber { get; set; }
+        [Required]
         [MaxLength(20)]
         [MinLength(1)]
         public string teacher { get; set; }
